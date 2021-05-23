@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
 public class Aiming : MonoBehaviour
-{
-    public Rig aimingPoseHead;
+{   //Changing weight of head, spine1, spine2 beacuse weapon slots are on the same rig 
+    public MultiAimConstraint aimingPoseHead;
+    public MultiAimConstraint aimingPoseSpine1;
+    public MultiAimConstraint aimingPoseSpine2;
     public Rig aimingPose;
     public Rig handIK;
     public GameObject moveCamera;
@@ -16,7 +18,6 @@ public class Aiming : MonoBehaviour
 
     RaycastWeapon weapon;
     
-    //AnimatorOverrideController overrides;
 
     public bool isAiming = false;
     public bool triggerHeld = false;
@@ -27,8 +28,9 @@ public class Aiming : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //anim = GetComponent<Animator>();
-        //overrides = anim.runtimeAnimatorController as AnimatorOverrideController;
+        aimingPoseHead.weight = 0;
+        aimingPoseSpine1.weight = 0;
+        aimingPoseSpine2.weight = 0;
     }
 
     public void LookForWeapon(RaycastWeapon weaponClone)
@@ -41,9 +43,6 @@ public class Aiming : MonoBehaviour
     {
         if (weapon)
         {
-            //handIK.weight = 1.0f;
-            //anim.SetLayerWeight(1, 1.0f);
-            //overrides["weapon_anim_empty"] = weapon.weaponPoseAnimation;
             CheckAim();
             CheckShoot();
         }
@@ -81,6 +80,8 @@ public class Aiming : MonoBehaviour
             aimReticle.SetActive(true);
             aimingPose.weight += 2f * Time.deltaTime;
             aimingPoseHead.weight = 1;
+            aimingPoseSpine1.weight = 1;
+            aimingPoseSpine2.weight = 1;
         }
         else
         {
@@ -90,6 +91,8 @@ public class Aiming : MonoBehaviour
             aimReticle.SetActive(false);
             aimingPose.weight -= 2f * Time.deltaTime;
             aimingPoseHead.weight = 0;
+            aimingPoseSpine1.weight = 0;
+            aimingPoseSpine2.weight = 0;
         }
     }
     private void HandleRightTrigger()
