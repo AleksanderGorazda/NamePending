@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Animations;
+using UnityEngine.Animations.Rigging;
+using UnityEngine.Animations;
 
 public class ActiveWeapon : MonoBehaviour
 {
     public enum WeaponSlot
     {
         Primary = 0,
-        Secondary = 1
+        Secondary = 1,
+        Tertiary = 2
     }
     public Transform crossHairTarget;
     public Transform[] weaponSlots;
@@ -16,7 +19,7 @@ public class ActiveWeapon : MonoBehaviour
     public Transform weaponRightGrip;
     public Animator rigController;
 
-    RaycastWeapon[] equippedWeapons = new RaycastWeapon[2];
+    RaycastWeapon[] equippedWeapons = new RaycastWeapon[3];
     int activeWeaponIndex;
     Aiming weaponHandler;
     // Start is called before the first frame update
@@ -52,11 +55,24 @@ public class ActiveWeapon : MonoBehaviour
             }
             if (Input.GetButtonDown("Quick1") || Input.GetAxisRaw("DPadX") == -1)
             {
-                SetActiveWeapon(WeaponSlot.Primary);
+                if (equippedWeapons[0])
+                {
+                    SetActiveWeapon(WeaponSlot.Primary);
+                } 
             }
             if (Input.GetButtonDown("Quick2") || Input.GetAxisRaw("DPadX") == 1)
             {
-                SetActiveWeapon(WeaponSlot.Secondary);
+                if (equippedWeapons[1])
+                {
+                    SetActiveWeapon(WeaponSlot.Secondary);
+                }
+            }
+            if (Input.GetButtonDown("Quick3") || Input.GetAxisRaw("DPadY") == 1)
+            {
+                if (equippedWeapons[2])
+                {
+                    SetActiveWeapon(WeaponSlot.Tertiary);
+                }
             }
             if (Input.GetButton("Fire2") || Input.GetAxisRaw("LeftTrigger") > 0)
             {
@@ -84,7 +100,6 @@ public class ActiveWeapon : MonoBehaviour
         //weapon.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
         weaponHandler.LookForWeapon(weapon);
         equippedWeapons[weaponSlotIndex] = weapon;
-
         SetActiveWeapon(newWeapon.weaponSlot);
     }
 
