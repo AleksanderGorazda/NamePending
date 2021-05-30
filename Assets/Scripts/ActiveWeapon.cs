@@ -18,6 +18,7 @@ public class ActiveWeapon : MonoBehaviour
     public Transform weaponLeftGrip;
     public Transform weaponRightGrip;
     public Animator rigController;
+    public Cinemachine.CinemachineFreeLook aimCamera;
 
     RaycastWeapon[] equippedWeapons = new RaycastWeapon[3];
     int activeWeaponIndex;
@@ -95,6 +96,8 @@ public class ActiveWeapon : MonoBehaviour
         }
         weapon = newWeapon;
         weapon.raycastDestination = crossHairTarget;
+        weapon.recoil.aimCamera = aimCamera;
+        weapon.recoil.rigController = rigController;
         weapon.transform.SetParent(weaponSlots[weaponSlotIndex], false);
         //weapon.transform.localPosition = Vector3.zero;
         //weapon.transform.localEulerAngles = new Vector3(0f, 0f, 0f);

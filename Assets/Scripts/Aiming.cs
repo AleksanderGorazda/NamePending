@@ -16,12 +16,16 @@ public class Aiming : MonoBehaviour
     public GameObject aimReticle;
     public Animator rigController;
 
+
     RaycastWeapon weapon;
     
-
+    //responsible for controller input mostly
     public bool isAiming = false;
     public bool triggerHeld = false;
     public bool isTriggerReady = false;
+
+    //responsible for firerate
+    bool canShoot = true;
 
     private bool weaponReady = false;
 
@@ -46,32 +50,61 @@ public class Aiming : MonoBehaviour
             CheckAim();
             CheckShoot();
         }
-        else
-        {
-            //handIK.weight = 0.0f;
-            //anim.SetLayerWeight(1, 0.0f);
-        }
-        
     }
 
     private void CheckShoot()
     {
-            if (isAiming && (Input.GetButtonDown("Fire1") || isTriggerReady))
-            {
-                weapon.Shoot();
-                isTriggerReady = false;
-            }
-            if (isAiming == false || (Input.GetButtonUp("Fire1") || Input.GetAxisRaw("RightTrigger") <= 0))
-            {
-                weapon.StopShooting();
-            }
+        switch ((int)weapon.weaponSlot)
+        {
+            case 0:
+                if (isAiming && (Input.GetButtonDown("Fire1") || isTriggerReady))
+                {
+                    if (canShoot)
+                    {
+                        StartCoroutine(RifleWait(weapon.fireRate));
+                    }
+                }
+
+                if (isAiming == false || (Input.GetButtonUp("Fire1") || Input.GetAxisRaw("RightTrigger") <= 0))
+                {
+                    weapon.StopShooting();
+                }
+                break;
+            case 1:
+                if (isAiming && (Input.GetButtonDown("Fire1") || isTriggerReady))
+                {
+                    if (canShoot)
+                    {
+                        StartCoroutine(RifleWait(weapon.fireRate));
+                    }
+                }
+
+                if (isAiming == false || (Input.GetButtonUp("Fire1") || Input.GetAxisRaw("RightTrigger") <= 0))
+                {
+                    weapon.StopShooting();
+                }
+                break;
+            case 2:
+                if (isAiming && (Input.GetButton("Fire1") || Input.GetAxisRaw("RightTrigger") >= 0.1))
+                {
+                    if (canShoot)
+                    {
+                        StartCoroutine(RifleWait(weapon.fireRate));
+                    }
+                }
+
+                if (isAiming == false || (Input.GetButtonUp("Fire1") || Input.GetAxisRaw("RightTrigger") <= 0))
+                {
+                    weapon.StopShooting();
+                }
+                break;
+        }
     }
 
     private void CheckAim() //Checking aim, setting camera, changing position, changing rotation method
     {
         if (rigController.GetBool("aim_weapon") && !rigController.GetBool("holster_weapon"))
         {
-            //overrides["weapon_anim_empty"] = weapon.weaponAimAnimation;
             HandleRightTrigger();
             isAiming = true;
             transform.rotation = Quaternion.Euler(0f, camera.eulerAngles.y, 0f);
@@ -106,5 +139,14 @@ public class Aiming : MonoBehaviour
             isTriggerReady = true;
             triggerHeld = false;
         }
+    }
+
+    IEnumerator RifleWait(float waitTime)
+    {
+        canShoot = false;
+        weapon.Shoot();
+        isTriggerReady = false;
+        yield return new WaitForSeconds(waitTime);
+        canShoot = true;
     }
 }

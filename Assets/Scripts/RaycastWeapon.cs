@@ -14,13 +14,22 @@ public class RaycastWeapon : MonoBehaviour
     public ActiveWeapon.WeaponSlot weaponSlot;
 
     public bool isShooting = false;
+    public float fireRate;
+    public int flashSize;
+
+    public WeaponRecoil recoil;
 
     Ray ray;
     RaycastHit hitInfo;
+
+    void Awake()
+    {
+        recoil = GetComponent<WeaponRecoil>();
+    }
     public void Shoot()
     {
         isShooting = true;
-        muzzleFlash.Emit(1);
+        muzzleFlash.Emit(flashSize);
   
         ray.origin = raycastOrigin.position;
         ray.direction = raycastDestination.position - raycastOrigin.position;
@@ -35,6 +44,7 @@ public class RaycastWeapon : MonoBehaviour
             
             //Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 1.0f);
         }
+        recoil.GenerateRecoil(weaponName);
     }
 
     public void StopShooting()
