@@ -32,18 +32,42 @@ public class RaycastWeapon : MonoBehaviour
         muzzleFlash.Emit(flashSize);
   
         ray.origin = raycastOrigin.position;
-        ray.direction = raycastDestination.position - raycastOrigin.position;
-        if (Physics.Raycast(ray, out hitInfo))
+        if (weaponName == "shotgun")
         {
-            if (hitInfo.point != new Vector3(0.0f, 0.0f, 0.0f)) 
+            for (int i = 0; i < 10; i++)
             {
-                rockDebris.transform.position = hitInfo.point;
-                rockDebris.transform.forward = hitInfo.normal;
-                rockDebris.Emit(1);
+                float distance = Vector3.Distance(raycastOrigin.position, raycastDestination.position);
+                ray.direction = raycastDestination.position - raycastOrigin.position + new Vector3(0, Random.Range(-0.03f, 0.03f)*distance, Random.Range(-0.03f, 0.03f)*distance);
+                if (Physics.Raycast(ray, out hitInfo))
+                {
+                    if (hitInfo.point != new Vector3(0.0f, 0.0f, 0.0f))
+                    {
+                        rockDebris.transform.position = hitInfo.point;
+                        rockDebris.transform.forward = hitInfo.normal;
+                        rockDebris.Emit(1);
+                    }
+
+                    Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 1.0f);
+                }
             }
-            
-            //Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 1.0f);
         }
+        else
+        {
+
+                ray.direction = raycastDestination.position - raycastOrigin.position;
+                if (Physics.Raycast(ray, out hitInfo))
+                {
+                    if (hitInfo.point != new Vector3(0.0f, 0.0f, 0.0f))
+                    {
+                        rockDebris.transform.position = hitInfo.point;
+                        rockDebris.transform.forward = hitInfo.normal;
+                        rockDebris.Emit(1);
+                    }
+
+                    Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 1.0f);
+                }
+        }
+        
         recoil.GenerateRecoil(weaponName);
     }
 
