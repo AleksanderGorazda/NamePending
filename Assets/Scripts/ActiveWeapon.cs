@@ -23,10 +23,12 @@ public class ActiveWeapon : MonoBehaviour
     RaycastWeapon[] equippedWeapons = new RaycastWeapon[3];
     int activeWeaponIndex;
     Aiming weaponHandler;
+    Equipment equipment;
     // Start is called before the first frame update
     void Start()
     {
         weaponHandler = GetComponent<Aiming>();
+        equipment = GetComponent<Equipment>();
         RaycastWeapon existingWeapon = GetComponentInChildren<RaycastWeapon>();
         if (existingWeapon)
         {
@@ -149,6 +151,7 @@ public class ActiveWeapon : MonoBehaviour
         weaponHandler.LookForWeapon(weapon);
         if (weapon)
         {
+            equipment.ChangeAmmoUI(index);
             rigController.SetBool("holster_weapon", false);
             rigController.Play("equip_" + weapon.weaponName);
             do

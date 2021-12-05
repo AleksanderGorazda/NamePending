@@ -35,7 +35,7 @@ public class Movement : MonoBehaviour
     {
         GroundCheck();
         RegularMovement();
-        Jump();
+        //Jump();
     }
 
     private void GroundCheck()
@@ -48,7 +48,7 @@ public class Movement : MonoBehaviour
         }
     }
 
-    private void Jump()
+    /*private void Jump()
     {
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
@@ -57,7 +57,7 @@ public class Movement : MonoBehaviour
         }
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
-    }
+    }*/
 
     private void RegularMovement()
     {

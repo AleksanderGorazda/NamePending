@@ -8,13 +8,14 @@ public class WeaponPickup : MonoBehaviour
 
     ActiveWeapon activeWeapon;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         activeWeapon = other.gameObject.GetComponent<ActiveWeapon>();
-        if (activeWeapon)
+        if (activeWeapon && Input.GetButtonDown("Equip"))
         {
-            RaycastWeapon newWeapon = Instantiate(weaponPrefab);
-            activeWeapon.Equip(newWeapon);
+                RaycastWeapon newWeapon = Instantiate(weaponPrefab);
+                activeWeapon.Equip(newWeapon);
+            
         }
 
     }

@@ -8,6 +8,7 @@ public class RaycastWeapon : MonoBehaviour
     public ParticleSystem muzzleFlash;
     public Transform raycastOrigin;
     public Transform raycastDestination;
+    public AudioClip weaponShotSFX;
     //public AnimationClip weaponPoseAnimation;
     //public AnimationClip weaponAimAnimation;
     public string weaponName;
@@ -18,6 +19,8 @@ public class RaycastWeapon : MonoBehaviour
     public int flashSize;
 
     public WeaponRecoil recoil;
+    private AudioSource audioSource;
+    private Equipment equipment;
 
     Ray ray;
     RaycastHit hitInfo;
@@ -26,33 +29,42 @@ public class RaycastWeapon : MonoBehaviour
     {
         recoil = GetComponent<WeaponRecoil>();
     }
+
+    private void Start()
+    {
+        equipment = GetComponentInParent<Equipment>();
+    }
     public void Shoot()
     {
-        isShooting = true;
-        muzzleFlash.Emit(flashSize);
-  
-        ray.origin = raycastOrigin.position;
-        if (weaponName == "shotgun")
+        if (equipment.magazineAmmo[(int)weaponSlot] > 0)
         {
-            for (int i = 0; i < 10; i++)
-            {
-                float distance = Vector3.Distance(raycastOrigin.position, raycastDestination.position);
-                ray.direction = raycastDestination.position - raycastOrigin.position + new Vector3(0, Random.Range(-0.03f, 0.03f)*distance, Random.Range(-0.03f, 0.03f)*distance);
-                if (Physics.Raycast(ray, out hitInfo))
-                {
-                    if (hitInfo.point != new Vector3(0.0f, 0.0f, 0.0f))
-                    {
-                        rockDebris.transform.position = hitInfo.point;
-                        rockDebris.transform.forward = hitInfo.normal;
-                        rockDebris.Emit(1);
-                    }
+            isShooting = true;
+            muzzleFlash.Emit(flashSize);
+            AudioSource.PlayClipAtPoint(weaponShotSFX, transform.position);
+            equipment.RemoveAmmoFromMagazine((int)weaponSlot, 1);
 
-                    Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 1.0f);
+            ray.origin = raycastOrigin.position;
+            if (weaponName == "shotgun")
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    float distance = Vector3.Distance(raycastOrigin.position, raycastDestination.position);
+                    ray.direction = raycastDestination.position - raycastOrigin.position + new Vector3(Random.Range(-0.03f, 0.03f) * distance, Random.Range(-0.03f, 0.03f) * distance, Random.Range(-0.03f, 0.03f) * distance);
+                    if (Physics.Raycast(ray, out hitInfo))
+                    {
+                        if (hitInfo.point != new Vector3(0.0f, 0.0f, 0.0f))
+                        {
+                            rockDebris.transform.position = hitInfo.point;
+                            rockDebris.transform.forward = hitInfo.normal;
+                            rockDebris.Emit(1);
+                        }
+
+                        Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 1.0f);
+                    }
                 }
             }
-        }
-        else
-        {
+            else
+            {
 
                 ray.direction = raycastDestination.position - raycastOrigin.position;
                 if (Physics.Raycast(ray, out hitInfo))
@@ -66,9 +78,10 @@ public class RaycastWeapon : MonoBehaviour
 
                     Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 1.0f);
                 }
+            }
+
+            recoil.GenerateRecoil(weaponName);
         }
-        
-        recoil.GenerateRecoil(weaponName);
     }
 
     public void StopShooting()

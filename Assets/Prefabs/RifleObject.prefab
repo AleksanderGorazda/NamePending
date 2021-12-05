@@ -9883,6 +9883,7 @@ MonoBehaviour:
   muzzleFlash: {fileID: 5483538382399677022}
   raycastOrigin: {fileID: 6611420634627503048}
   raycastDestination: {fileID: 0}
+  weaponShotSFX: {fileID: 8300000, guid: 727df76d9823dd045884f9327af817ab, type: 3}
   weaponName: rifle
   weaponSlot: 2
   isShooting: 0

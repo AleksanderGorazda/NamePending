@@ -29003,6 +29003,7 @@ MonoBehaviour:
   muzzleFlash: {fileID: 3251752710152293784}
   raycastOrigin: {fileID: 4249575943838194702}
   raycastDestination: {fileID: 0}
+  weaponShotSFX: {fileID: 8300000, guid: f921c6973ed4f174faae988fb79c445b, type: 3}
   weaponName: handgun
   weaponSlot: 1
   isShooting: 0

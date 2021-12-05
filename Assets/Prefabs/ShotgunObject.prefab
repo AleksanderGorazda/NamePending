@@ -179,6 +179,7 @@ MonoBehaviour:
   muzzleFlash: {fileID: 1499624183404658364}
   raycastOrigin: {fileID: 222560038917812010}
   raycastDestination: {fileID: 0}
+  weaponShotSFX: {fileID: 8300000, guid: 36138afdb5ae14c41a28f9937692ab67, type: 3}
   weaponName: shotgun
   weaponSlot: 0
   isShooting: 0
